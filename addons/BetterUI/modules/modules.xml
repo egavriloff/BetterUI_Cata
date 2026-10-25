@@ -1,3 +1,4 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
     <Script file="editor_mode.lua"/>
+    <Include file="unitframes\unitframes.xml"/>
 </Ui>

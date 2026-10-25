@@ -57,11 +57,30 @@ L["auto"] = "Язык клиента"
 L["enUS"] = "English"
 L["ruRU"] = "Русский"
 L["Changes apply immediately out of combat."] = "Изменения применяются сразу вне боя."
-L["Edit the diagnostic widget; Save/Cancel affect HUD only. Drag this window by its title."] =
-    "Редактируйте виджет: Сохранить/Отмена влияют только на HUD. Окно перемещается за заголовок."
+L["Edit HUD frames; Save/Cancel affect HUD only. Drag this window by its title."] =
+    "Редактируйте рамки HUD: Сохранить/Отмена влияют только на HUD. Окно перемещается за заголовок."
 L["This action replaces or removes saved settings. Continue?"] =
     "Это действие заменит или удалит сохранённые настройки. Продолжить?"
 L["Paste a BetterUI preset, then Import."] = "Вставьте шаблон BetterUI и нажмите Импорт."
 L["Imported"] = "Импорт выполнен"
 L["Enabled"] = "Включён"
 L["Disabled"] = "Выключен"
+
+-- Phase 2.1 unit frames.
+L["Unit Frames"] = "Рамки персонажа и цели"
+L["Player Frame"] = "Рамка персонажа"
+L["Target Frame"] = "Рамка цели"
+L["Enable styling"] = "Включить оформление"
+L["Visible"] = "Отображать"
+L["Portrait"] = "Портрет"
+L["Dragon decoration"] = "Украшение дракона"
+L["HP text"] = "Текст здоровья"
+L["Power text"] = "Текст ресурса"
+L["Position X / Y"] = "Положение X / Y"
+L["Apply position"] = "Применить положение"
+L["Reset unit frame"] = "Сбросить рамку"
+L["Unit frame changes join HUD Save/Cancel. Vehicle art stays native."] =
+    "Рамки участвуют в Сохранить/Отмена HUD. Транспорт использует штатный вид."
+L["Dead"] = "Мёртв"
+L["Ghost"] = "Призрак"
+L["Offline"] = "Не в сети"

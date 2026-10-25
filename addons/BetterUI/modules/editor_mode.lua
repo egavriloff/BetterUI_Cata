@@ -14,8 +14,14 @@ local function windowStyle(frame)
     frame:SetBackdropColor(0.04, 0.07, 0.10, 0.95)
 end
 addon.StyleWindow = windowStyle
+function Editor:Config(id)
+    if id == "player" or id == "target" then
+        return addon.db.profile.unitframes[id]
+    end
+    return addon.db.profile[id]
+end
 function Editor:Apply(id)
-    local frame, cfg = self.frames[id], addon.db.profile[id]
+    local frame, cfg = self.frames[id], self:Config(id)
     if not frame then
         return
     end
@@ -43,12 +49,12 @@ function Editor:Capture(id)
     local x, y = frame:GetCenter()
     local cx, cy = UIParent:GetCenter()
     local relativeScale = frame:GetEffectiveScale() / UIParent:GetEffectiveScale()
-    local cfg = addon.db.profile[id]
+    local cfg = self:Config(id)
     cfg.x, cfg.y = x * relativeScale - cx, y * relativeScale - cy
 end
 function addon:RegisterEditableFrame(id, frame)
     assert(not Editor.frames[id], "Duplicate editable frame")
-    assert(id == "widget" or id == "window", "Unknown editable frame config")
+    assert(id == "widget" or id == "window" or id == "player" or id == "target", "Unknown editable frame config")
     Editor.frames[id] = frame
     frame:SetMovable(true)
     frame:SetClampedToScreen(true)
@@ -68,6 +74,9 @@ function addon:RegisterEditableFrame(id, frame)
         if Editor.dragging == id then
             Editor:Capture(id)
             Editor.dragging = nil
+            if id == "player" or id == "target" then
+                addon:RefreshConfig()
+            end
         end
     end)
 end
@@ -113,6 +122,9 @@ function Editor:RestoreHUD(snapshot)
     local profile = addon.db.profile
     profile.widget = addon.Copy(snapshot.widget)
     profile.editorShowGrid = snapshot.editorShowGrid
+    if snapshot.unitframes then
+        profile.unitframes = addon.Copy(snapshot.unitframes)
+    end
 end
 function Editor:Grid()
     if self.grid then
@@ -162,7 +174,11 @@ function Editor:Start()
     if self.active then
         return true
     end
-    self.snapshot = { widget = addon.Copy(addon.db.profile.widget), editorShowGrid = addon.db.profile.editorShowGrid }
+    self.snapshot = {
+        widget = addon.Copy(addon.db.profile.widget),
+        unitframes = addon.Copy(addon.db.profile.unitframes),
+        editorShowGrid = addon.db.profile.editorShowGrid,
+    }
     self.active = true
     if addon.db.profile.editorShowGrid then
         self:Grid():Show()
@@ -176,6 +192,11 @@ function Editor:Abort()
         self.dragging = nil
     end
     self.active = false
+    if addon.UnitFrames then
+        for _, entry in pairs(addon.UnitFrames.entries) do
+            entry.mover:Hide()
+        end
+    end
     if self.frames.widget then
         self.frames.widget:EnableMouse(false)
     end
@@ -242,6 +263,10 @@ function addon:ResetPositions()
     local p, d = self.db.profile, self.defaults.profile
     p.widget.x, p.widget.y, p.widget.scale = d.widget.x, d.widget.y, d.widget.scale
     p.window = self.Copy(d.window)
+    for _, id in ipairs({ "player", "target" }) do
+        p.unitframes[id].x, p.unitframes[id].y, p.unitframes[id].scale =
+            d.unitframes[id].x, d.unitframes[id].y, d.unitframes[id].scale
+    end
     self:RefreshConfig()
     return true
 end

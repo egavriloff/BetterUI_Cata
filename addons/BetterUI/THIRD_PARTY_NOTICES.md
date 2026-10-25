@@ -15,7 +15,14 @@ These libraries are embedded in BetterUI, not distributed as standalone librarie
 Upstream-generated loadstring dispatchers in AceAddon/CallbackHandler operate only
 on fixed internal source strings; no user input is evaluated by BetterUI.
 
-No donor artwork, fonts, gameplay libraries, NewEra or ClassicAPI are bundled.
+Phase 2.1 normal Player/Target skin geometry, power map and dragon atlas cells are
+adapted from DragonUI modules/unitframes/{uf_core,uf_skins,player,target_style,text_system}.lua
+at the same pinned revision. Newly authored adapter code uses the same MIT terms.
+Selected files under Textures/UnitFrames/{HD,Bars}/ and uiunitframeboss2x.blp are
+byte-identical game artwork from DragonUI/Textures/UnitFrames at that revision.
+Copyright Blizzard Entertainment. These artworks are NOT covered by MIT and are
+included only for use with World of Warcraft, as stated in DragonUI LICENSE.txt.
+No donor fonts, gameplay libraries, NewEra or ClassicAPI are bundled.
 Client textures/fonts/templates referenced at runtime are Blizzard's own assets.
 World of Warcraft is a Blizzard Entertainment trademark. This project is unofficial.
 Full provenance and unchanged vendor SHA256s: docs/upstreams.md and docs/phase1-vendor-lock.json

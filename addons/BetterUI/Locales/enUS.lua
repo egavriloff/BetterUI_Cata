@@ -53,7 +53,7 @@ local keys = {
     "enUS",
     "ruRU",
     "Changes apply immediately out of combat.",
-    "Edit the diagnostic widget; Save/Cancel affect HUD only. Drag this window by its title.",
+    "Edit HUD frames; Save/Cancel affect HUD only. Drag this window by its title.",
     "This action replaces or removes saved settings. Continue?",
     "Paste a BetterUI preset, then Import.",
     "Imported",
@@ -64,3 +64,21 @@ local keys = {
 for _, key in ipairs(keys) do
     L[key] = true
 end
+
+-- Phase 2.1 unit frames.
+L["Unit Frames"] = true
+L["Player Frame"] = true
+L["Target Frame"] = true
+L["Enable styling"] = true
+L["Visible"] = true
+L["Portrait"] = true
+L["Dragon decoration"] = true
+L["HP text"] = true
+L["Power text"] = true
+L["Position X / Y"] = true
+L["Apply position"] = true
+L["Reset unit frame"] = true
+L["Unit frame changes join HUD Save/Cancel. Vehicle art stays native."] = true
+L["Dead"] = true
+L["Ghost"] = true
+L["Offline"] = true

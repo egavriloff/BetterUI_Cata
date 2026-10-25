@@ -66,7 +66,7 @@ Panel:RegisterTab("general", "Settings", function(page)
             addon:RefreshConfig()
         end
     end))
-    C.Label(page, L["Edit the diagnostic widget; Save/Cancel affect HUD only. Drag this window by its title."], 0, -275)
+    C.Label(page, L["Edit HUD frames; Save/Cancel affect HUD only. Drag this window by its title."], 0, -275)
     C.Button(page, "Edit Mode", 0, -310, 170, function()
         addon.Editor:Start()
     end)
@@ -179,6 +179,77 @@ Panel:RegisterTab("layouts", "Layout", function(page)
         end)
     end)
 end)
+Panel.unitFrameID = "player"
+Panel:RegisterTab("unitframes", "Unit Frames", function(page)
+    local function config()
+        return addon.db.profile.unitframes[Panel.unitFrameID]
+    end
+    local function change(key, value)
+        C.Result(addon:SetUnitFrame(Panel.unitFrameID, key, value))
+    end
+    C.Button(page, "Player Frame", 0, 0, 250, function()
+        Panel.unitFrameID = "player"
+        Panel:Refresh()
+    end)
+    C.Button(page, "Target Frame", 270, 0, 250, function()
+        Panel.unitFrameID = "target"
+        Panel:Refresh()
+    end)
+    Panel.unitFrameLabel = C.Label(page, "", 0, -35)
+    for index, option in ipairs({
+        { "Enable styling", "enabled" },
+        { "Visible", "visible" },
+        { "Portrait", "portrait" },
+        { "Dragon decoration", "dragon" },
+        { "HP text", "healthText" },
+        { "Power text", "powerText" },
+    }) do
+        local key = option[2]
+        track(C.Check(page, option[1], 0, -65 - (index - 1) * 32, function()
+            return config()[key]
+        end, function(value)
+            change(key, value)
+        end))
+    end
+    track(C.Slider(page, "Scale", 0, -265, function()
+        return config().scale
+    end, function(value)
+        change("scale", value)
+    end))
+    C.Label(page, L["Position X / Y"], 0, -325)
+    local x, y = C.Input(page, 0, -355, 140), C.Input(page, 160, -355, 140)
+    C.Button(page, "Apply position", 320, -355, 240, function()
+        if not addon:CanChange() then
+            return
+        end
+        local nx, ny = tonumber(x:GetText()), tonumber(y:GetText())
+        if not addon.Finite(nx, -10000, 10000) or not addon.Finite(ny, -10000, 10000) then
+            C.Result(false, "Invalid data")
+            return
+        end
+        local cfg = config()
+        cfg.x, cfg.y = nx, ny
+        addon:RefreshConfig()
+    end)
+    C.Button(page, "Reset unit frame", 0, -400, 180, function()
+        change("reset")
+    end)
+    C.Button(page, "Edit Mode", 185, -400, 130, function()
+        addon.Editor:Start()
+    end)
+    C.Button(page, "Save", 330, -400, 130, function()
+        addon.Editor:Finish(true)
+    end)
+    C.Button(page, "Cancel", 475, -400, 130, function()
+        addon.Editor:Finish(false)
+    end)
+    C.Label(page, L["Unit frame changes join HUD Save/Cancel. Vehicle art stays native."], 0, -440)
+    Panel.RefreshUnitFrameInputs = function()
+        x:SetText(tostring(config().x))
+        y:SetText(tostring(config().y))
+        Panel.unitFrameLabel:SetText(L[Panel.unitFrameID == "player" and "Player Frame" or "Target Frame"])
+    end
+end)
 for index, id in ipairs(Panel.order) do
     local key, tab = id, Panel.tabs[id]
     tab.page = CreateFrame("Frame", nil, frame)
@@ -186,7 +257,7 @@ for index, id in ipairs(Panel.order) do
     tab.page:SetSize(680, 480)
     tab.build(tab.page)
     tab.page:Hide()
-    C.Button(frame, tab.title, 25 + (index - 1) * 230, -65, 220, function()
+    C.Button(frame, tab.title, 25 + (index - 1) * 172, -65, 165, function()
         Panel:Select(key)
     end)
 end
@@ -210,6 +281,9 @@ function Panel:Refresh()
     addon.Editor:Apply("window")
     for _, control in ipairs(self.updaters) do
         control:UpdateValue()
+    end
+    if self.RefreshUnitFrameInputs then
+        self.RefreshUnitFrameInputs()
     end
     local names = addon.db:GetProfiles()
     table.sort(names)
