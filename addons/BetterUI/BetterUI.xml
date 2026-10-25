@@ -1,0 +1,7 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file="config.lua"/>
+    <Script file="database.lua"/>
+    <Include file="core/core.xml"/>
+    <Script file="core.lua"/>
+    <Include file="modules/modules.xml"/>
+</Ui>

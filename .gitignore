@@ -1,0 +1,22 @@
+# Client/runtime and local editor outputs
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+/build/
+/dist/
+/.wow/
+
+# Private development infrastructure belongs in BetterUI_Cata_WorkSpace.
+/registry/
+/scripts/
+/tests/
+/docs/
+/.agents/
+/.codex/
+/externals/
+/.local/
+/.venv/
+__pycache__/

@@ -1,0 +1,17 @@
+* text=auto
+*.lua text eol=lf
+*.xml text eol=lf
+*.toc text eol=lf
+*.md text eol=lf
+*.png binary
+*.tga binary
+*.blp binary
+*.ttf binary
+
+# The initial addon import preserves every working-tree byte, including CRLF.
+# Editor settings do not define or rewrite this source snapshot.
+addons/** -text !eol
+
+# Embedded upstream snapshots: preserve original bytes and line endings.
+addons/BetterUI/libs/** -text !eol -whitespace
+addons/BetterUI/LICENSES/** -text !eol -whitespace

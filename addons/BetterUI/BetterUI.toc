@@ -1,0 +1,17 @@
+## Interface: 40300
+## Title: BetterUI Cata
+## Notes: Phase 1 settings, profiles and editor for original Cataclysm 4.3.4 (15595).
+## Author: BetterUI contributors; DragonUI architecture by NeticSoul
+## Version: 0.1.0
+## SavedVariables: BetterUIDB, BetterUIBackup
+## X-License: See THIRD_PARTY_NOTICES.md and LICENSES (per component).
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+libs\AceAddon-3.0\AceAddon-3.0.xml
+libs\AceEvent-3.0\AceEvent-3.0.xml
+libs\AceDB-3.0\AceDB-3.0.xml
+libs\AceConsole-3.0\AceConsole-3.0.xml
+libs\AceLocale-3.0\AceLocale-3.0-DragonUI.lua
+libs\AceSerializer-3.0\AceSerializer-3.0.xml
+Locales\Load_Locales.xml
+BetterUI.xml

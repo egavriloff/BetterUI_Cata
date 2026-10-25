@@ -1,0 +1,5 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file="api.lua"/>
+    <Script file="position_presets.lua"/>
+    <Script file="commands.lua"/>
+</Ui>

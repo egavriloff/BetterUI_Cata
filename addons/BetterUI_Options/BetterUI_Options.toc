@@ -1,0 +1,12 @@
+## Interface: 40300
+## Title: BetterUI Cata Options
+## Notes: Load-on-demand Phase 1 configuration for BetterUI.
+## Author: BetterUI contributors
+## Version: 0.1.0
+## LoadOnDemand: 1
+## Dependencies: BetterUI
+## X-License: MIT for project code; see BetterUI/THIRD_PARTY_NOTICES.md.
+Locales\Load_Locales.xml
+core.lua
+panel\controls.lua
+panel\panel.lua
