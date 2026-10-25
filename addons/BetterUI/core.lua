@@ -47,6 +47,8 @@ function addon:ToggleOptionsUI(force)
     end
     if not self.OptionsPanel or not self.OptionsPanel.ready then self:Error(self.L["Options unavailable"]); return false end
     self.state.options = true
+    -- selene: allow(if_same_then_else)
+    -- Force-open and hidden states intentionally share Show; the visible toggle must Hide.
     if force then self.OptionsPanel.frame:Show()
     elseif self.OptionsPanel.frame:IsShown() then self.OptionsPanel.frame:Hide()
     else self.OptionsPanel.frame:Show() end

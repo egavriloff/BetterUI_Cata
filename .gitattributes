@@ -11,6 +11,7 @@
 # The initial addon import preserves every working-tree byte, including CRLF.
 # Editor settings do not define or rewrite this source snapshot.
 addons/** -text !eol
+addons/**/*.lua whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
 # Embedded upstream snapshots: preserve original bytes and line endings.
 addons/BetterUI/libs/** -text !eol -whitespace
