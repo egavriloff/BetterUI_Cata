@@ -84,3 +84,10 @@ L["Unit frame changes join HUD Save/Cancel. Vehicle art stays native."] =
 L["Dead"] = "Мёртв"
 L["Ghost"] = "Призрак"
 L["Offline"] = "Не в сети"
+
+-- Unit-frame visual diagnostics.
+L["Unit frame texture diagnostics"] = "Диагностика текстур рамок"
+L["Check every image visually; a retained path does not prove texture loading."] =
+    "Проверьте каждое изображение: сохранённый путь не доказывает загрузку текстуры."
+L["Verify pixels"] = "Проверьте изображение"
+L["Missing texture"] = "Текстура отсутствует"

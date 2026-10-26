@@ -28,6 +28,14 @@ does not display native heal-prediction overlays; disable styling to restore the
 Fat/compact/Forever skins, custom absorb/resource layers and other unit frames are
 outside this slice. Report taint, overlap and vehicle issues against the exact build.
 
+Use `/betterui ufdiag` out of combat to inspect every imported texture sheet, expected
+file dimensions and detected geometry/load errors. A retained texture path alone does
+not prove decoded pixels; inspect each gallery image. Fully exit/restart the client
+after installing new image files. Player dragon art requires its decoration option;
+normal targets have no dragon, while elite/rare/rareelite/boss targets use their
+classification. The normal skin uses the original DragonUI anchors and native client
+font families, without an extra class-text row below the frame.
+
 ## Source and attribution
 
 This public repository contains the distributable addon files and their notices.

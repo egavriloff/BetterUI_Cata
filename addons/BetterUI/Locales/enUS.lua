@@ -82,3 +82,9 @@ L["Unit frame changes join HUD Save/Cancel. Vehicle art stays native."] = true
 L["Dead"] = true
 L["Ghost"] = true
 L["Offline"] = true
+
+-- Unit-frame visual diagnostics.
+L["Unit frame texture diagnostics"] = true
+L["Check every image visually; a retained path does not prove texture loading."] = true
+L["Verify pixels"] = true
+L["Missing texture"] = true
