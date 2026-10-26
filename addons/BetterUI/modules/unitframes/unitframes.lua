@@ -38,6 +38,7 @@ function UF:Update(id)
         end
     end
     entry.suppressed = active
+    V:Combat(entry, id, cfg, active, 0)
     if not active then
         return
     end
@@ -168,6 +169,8 @@ function UF:Restore(id)
     entry.suppressed = false
     entry.skin:SetAlpha(0)
     entry.mover:Hide()
+    entry.combat:Hide()
+    entry.combatTimer = 0
     for region, alpha in pairs(entry.alphas) do
         region:SetAlpha(alpha)
     end
@@ -234,6 +237,7 @@ function UF:Disable(id)
     end
     if self.entries[id] then
         self.entries[id].mover:Hide()
+        self.entries[id].combat:Hide()
     end
     if InCombatLockdown() then
         return addon.CombatQueue:Add("unitframes-" .. id, function()
@@ -297,9 +301,10 @@ function UF:ShowVisualDiagnostics()
         local frame = CreateFrame("Frame", nil, UIParent)
         self.visualPanel = frame
         frame:SetFrameStrata("DIALOG")
-        frame:SetSize(840, 670)
+        local height = 110 + math.ceil(#V.assets / 4) * 112
+        frame:SetSize(840, height)
         frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-        frame:SetScale(math.min(1, (UIParent:GetWidth() - 24) / 840, (UIParent:GetHeight() - 24) / 670))
+        frame:SetScale(math.min(1, (UIParent:GetWidth() - 24) / 840, (UIParent:GetHeight() - 24) / height))
         addon.StyleWindow(frame)
         local title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         title:SetPoint("TOPLEFT", frame, "TOPLEFT", 16, -16)
@@ -374,11 +379,16 @@ for _, event in ipairs({
     "PLAYER_ALIVE",
     "PLAYER_UNGHOST",
     "PLAYER_ENTERING_WORLD",
+    "PLAYER_LOGOUT",
 }) do
     events:RegisterEvent(event)
 end
 events:RegisterEvent("PLAYER_REGEN_ENABLED")
 events:SetScript("OnEvent", function(_, event)
+    if event == "PLAYER_LOGOUT" then
+        UF.loggedOut = true
+        return
+    end
     if event == "PLAYER_REGEN_ENABLED" then
         addon.CombatQueue:Process()
     end
@@ -386,8 +396,9 @@ events:SetScript("OnEvent", function(_, event)
 end)
 -- Run after native event handlers, never assume frame registration order. The single
 -- state comparison also catches Blizzard's asynchronous vehicle animation completion.
-events:SetScript("OnUpdate", function()
-    if not addon.db then
+events:SetScript("OnUpdate", function(_, elapsed)
+    -- AceDB strips default-only tables/metatables on PLAYER_LOGOUT.
+    if not addon.db or UF.loggedOut then
         return
     end
     local vehicle = PlayerFrame.state == "vehicle"
@@ -400,7 +411,7 @@ events:SetScript("OnUpdate", function()
     end
     -- Blizzard may reset portrait/bar alpha in its own OnUpdate, after the last unit event.
     -- Touch only visual alpha; never unregister native events or replace secure handlers.
-    for _, entry in pairs(UF.entries) do
+    for id, entry in pairs(UF.entries) do
         if entry.suppressed then
             for region in pairs(entry.alphas) do
                 if region:GetAlpha() ~= 0 then
@@ -408,6 +419,7 @@ events:SetScript("OnUpdate", function()
                 end
             end
         end
+        V:Combat(entry, id, UF:Config(id), entry.suppressed and addon.state.enabled, elapsed)
     end
     if UF.pending then
         UF.pending = nil

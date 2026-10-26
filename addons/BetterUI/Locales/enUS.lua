@@ -75,6 +75,7 @@ L["Portrait"] = true
 L["Dragon decoration"] = true
 L["HP text"] = true
 L["Power text"] = true
+L["Combat highlight"] = true
 L["Position X / Y"] = true
 L["Apply position"] = true
 L["Reset unit frame"] = true

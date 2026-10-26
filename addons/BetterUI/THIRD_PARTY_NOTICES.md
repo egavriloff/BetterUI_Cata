@@ -26,6 +26,10 @@ The visual-fidelity correction adds the missing HD/Target-NameStrip.tga and
 Player/ui-hud-unitframe-player-portraiton-cornerembellishment-2x.blp from that same
 revision. The original 17 imported texture files remain byte-identical.
 No donor fonts, gameplay libraries, NewEra or ClassicAPI are bundled.
+The combat-feedback slice adds byte-identical Forever/Player-InCombat.tga,
+Forever/Target-InCombat.tga and Target/ui-hud-unitframe-target-portraiton-incombat-2x.blp
+from that same revision. These remain Blizzard game artwork under the terms above.
+Combat pulse and contour rectangles are adapted from player.lua/uf_skins.lua/target_style.lua.
 Client textures/fonts/templates referenced at runtime are Blizzard's own assets.
 World of Warcraft is a Blizzard Entertainment trademark. This project is unofficial.
 Full provenance and unchanged vendor SHA256s: docs/upstreams.md and docs/phase1-vendor-lock.json

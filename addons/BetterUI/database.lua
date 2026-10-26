@@ -15,6 +15,7 @@ addon.defaults = {
                 scale = 1,
                 portrait = true,
                 dragon = false,
+                combatHighlight = true,
                 healthText = true,
                 powerText = true,
             },
@@ -26,6 +27,7 @@ addon.defaults = {
                 scale = 1,
                 portrait = true,
                 dragon = true,
+                combatHighlight = true,
                 healthText = true,
                 powerText = true,
             },
@@ -78,6 +80,11 @@ function addon.ValidateUnitFrame(t, kind)
     local allowed = { x = true, y = true, scale = true }
     local flags = { "enabled", "visible", "portrait", "dragon", "healthText", "powerText" }
     if kind == "settings" then
+        -- Additive option: older settings exports omitted it; nil keeps the default.
+        allowed.combatHighlight = true
+        if t.combatHighlight ~= nil and type(t.combatHighlight) ~= "boolean" then
+            return false
+        end
         for _, key in ipairs(flags) do
             allowed[key] = true
             if type(t[key]) ~= "boolean" then

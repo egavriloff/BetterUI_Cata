@@ -23,6 +23,9 @@ end
 asset("Dragons", "uiunitframeboss2x.blp", 512, 512)
 asset("NameStrip", "HD\\Target-NameStrip.tga", 512, 256)
 asset("Corner", "Player\\ui-hud-unitframe-player-portraiton-cornerembellishment-2x.blp", 64, 64)
+asset("PlayerCombat", "Forever\\Player-InCombat.tga", 512, 256)
+asset("DecoratedCombat", "Forever\\Target-InCombat.tga", 512, 256)
+asset("TargetCombat", "Target\\ui-hud-unitframe-target-portraiton-incombat-2x.blp", 512, 256)
 V.dragons = {
     elite = { tc = { 0.001953125, 0.314453125, 0.322265625, 0.630859375 }, w = 80, h = 79, x = 4.75 },
     rare = { tc = { 0.00390625, 0.31640625, 0.64453125, 0.953125 }, w = 80, h = 79, x = 4.75 },
@@ -109,6 +112,11 @@ function V:Create(entry)
     entry.corner:SetTexCoord(0, 44 / 64, 0, 44 / 64)
     entry.corner:SetSize(23, 23)
     anchor(entry.corner, "CENTER", entry.portrait, "CENTER", 16.5, -16.5)
+    -- Own noninteractive contour above the border, below dragon and text layers.
+    local combatLayer = layer(skin, base + 1)
+    entry.combat = combatLayer:CreateTexture(nil, "OVERLAY", nil, 6)
+    entry.combat:SetVertexColor(1, 0, 0)
+    entry.combat:Hide()
     local dragonLayer = layer(skin, base + 2)
     entry.dragon = dragonLayer:CreateTexture(nil, "ARTWORK", nil, 1)
     self:Bind(entry.dragon, "Dragons")
@@ -194,6 +202,56 @@ function V:Layout(entry, player, decorated)
     self:Size(entry, "corner", entry.corner, 23, 23)
     entry.health.label:SetWidth(health:GetWidth() - 12)
     entry.power.label:SetWidth(power:GetWidth() - (player and 12 or 26))
+    self:Bind(entry.combat, player and (decorated and "DecoratedCombat" or "PlayerCombat") or "TargetCombat")
+    if player then
+        self:Size(entry, "combat", entry.combat, decorated and 188 or 192, decorated and 67 or 71)
+        entry.combat:SetTexCoord(
+            decorated and 376 / 512 or 0,
+            decorated and 0 or 384 / 512,
+            0,
+            decorated and 134 / 256 or 142 / 256
+        )
+        anchor(entry.combat, "TOPLEFT", entry.background, "TOPLEFT", decorated and 66.5 or 1.5, decorated and 1.5 or 1)
+    else
+        self:Size(entry, "combat", entry.combat, 188, 67)
+        entry.combat:SetTexCoord(0, 376 / 512, 0, 134 / 256)
+        anchor(entry.combat, "BOTTOMLEFT", entry.skin, "BOTTOMLEFT", 1, 24)
+    end
+end
+function V:Combat(entry, id, cfg, active, elapsed)
+    local unit = entry.frame.unit or id
+    local fighting = InCombatLockdown()
+        and (id == "player" or (entry.frame.threatIndicator and entry.frame.threatIndicator:IsShown()))
+    local alive = UnitExists(unit)
+        and UnitIsConnected(unit)
+        and not UnitIsDead(unit)
+        and not UnitIsGhost(unit)
+        and UnitHealth(unit) > 0
+        and not UnitIsDead("player")
+        and not UnitIsGhost("player")
+    if
+        not active
+        or not cfg.enabled
+        or not cfg.visible
+        or cfg.combatHighlight == false
+        or not fighting
+        or not alive
+        or (id == "player" and entry.frame.state == "vehicle")
+    then
+        entry.combat:Hide()
+        entry.combatTimer = 0
+        return
+    end
+    if id == "player" then
+        -- DragonUI normal/decoration pulse: radians per second, independent of FPS.
+        entry.combatTimer = ((entry.combatTimer or 0) + (elapsed or 0) * 9) % (2 * math.pi)
+        local low, high = cfg.dragon and 0.2 or 0.3, cfg.dragon and 0.9 or 1
+        entry.combat:SetAlpha(low + (high - low) * (math.sin(entry.combatTimer) * 0.5 + 0.5))
+    else
+        -- Donor target uses native threat visibility without the player's pulse.
+        entry.combat:SetAlpha(1)
+    end
+    entry.combat:Show()
 end
 function V:Dragon(entry, player, classification)
     if classification == "worldboss" then
@@ -243,6 +301,7 @@ function V:Issues(entry)
         or not entry.border
         or not entry.dragon
         or not entry.corner
+        or not entry.combat
         or not entry.health
         or not entry.power
     then
@@ -261,6 +320,7 @@ function V:Issues(entry)
         entry.border,
         entry.dragon,
         entry.corner,
+        entry.combat,
     }) do
         if region and (region.visualAccepted == false or not region:GetTexture()) then
             issues[#issues + 1] = tostring(region.visualAsset) .. " TEXTURE MISSING/REJECTED"

@@ -203,10 +203,12 @@ Panel:RegisterTab("unitframes", "Unit Frames", function(page)
         { "Dragon decoration", "dragon" },
         { "HP text", "healthText" },
         { "Power text", "powerText" },
+        { "Combat highlight", "combatHighlight" },
     }) do
         local key = option[2]
-        track(C.Check(page, option[1], 0, -65 - (index - 1) * 32, function()
-            return config()[key]
+        track(C.Check(page, option[1], index == 7 and 270 or 0, index == 7 and -65 or -65 - (index - 1) * 32, function()
+            local value = config()[key]
+            return key == "combatHighlight" and value ~= false or value
         end, function(value)
             change(key, value)
         end))
